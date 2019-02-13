@@ -35,7 +35,7 @@ router.get('/', function( req, res, next) {
 });
 
 
-router.post('/nuevo', function(req, res, next){
+    router.post('/nuevo', function(req, res, next){
     var _newObject = Object.assign({} , myobject, req.body);
 
     
@@ -53,6 +53,37 @@ router.post('/nuevo', function(req, res, next){
       return res.status(200).json(_newObject);
     });
   });
+
+
+  router.put('/update/:RTN', function(req, res, next){
+    var RTN = req.params.RTN;
+    var _newParams = req.body;
+    var _estadoUpd = null;
+    var newData = data.map(
+      function(doc, i){
+        if (doc.RTN == RTN){
+          _estadoUpd = Object.assign(
+            {},
+            doc,
+            {"Correo":_newParams.Correo},
+            {"Telefono":_newParams.Telefono},
+            );
+          return _estadoUpd;
+        }
+        return doc;
+      }
+    );// end map
+    data = newData;
+    fileModel.write(data, function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ 'error': 'Error al Guardar Data' });
+      }
+      return res.status(200).json(_estadoUpd);
+    });
+  });
+
+
 
 
 
