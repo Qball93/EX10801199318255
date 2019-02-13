@@ -3,7 +3,7 @@ var express = require('express')
 var router = express.Router();
 
 
-var fileModel = require('/jsonmodel.js');
+var fileModel = require('./jsonmodel');
 
 
 var data = [];
@@ -33,3 +33,28 @@ router.get('/', function( req, res, next) {
       return res.status(200).json(data);
     }
 });
+
+
+router.post('/nuevo', function(req, res, next){
+    var _newObject = Object.assign({} , myobject, req.body);
+
+    
+    if(!data){
+      data = [];
+    }
+
+
+    data.push(_newObject);
+    fileModel.write(data, function(err){
+      if(err){
+        console.log(err);
+        return res.status(500).json({ 'error': 'Error al Obtener Data' });
+      }
+      return res.status(200).json(_newObject);
+    });
+  });
+
+
+
+
+  module.exports = router;
