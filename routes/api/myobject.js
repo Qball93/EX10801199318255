@@ -84,6 +84,34 @@ router.get('/', function( req, res, next) {
   });
 
 
+  router.delete('/delete/:RTN', function(req, res, next){
+    var RTN = req.params.RTN;
+    var newData = data.filter(
+      function (doc, i) {
+        if (doc.RTN == RTN) {
+          return false;
+        }
+        return true;
+      }
+    );// end map
+    data = newData;
+    fileModel.write(data, function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ 'error': 'Error al Guardar Data' });
+      }
+      return res.status(200).json({"delete": RTN});
+    });
+  }); // end delete
+  
+  fileModel.read(function(err , filedata){
+    if(err){
+      console.log(err);
+    } else{
+      data = JSON.parse(filedata);
+    }
+  });
+
 
 
 
